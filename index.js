@@ -1,5 +1,5 @@
 //global variables
-let angle = 0;
+// let angle = 0;
 let video;
 let handPose;
 //stores the x,y coordinates and confidence score
@@ -17,9 +17,11 @@ let virtual_click = false;
 let pointerX_pos;
 let pointerY_pos;
 
-let waitt = 1000;
+let waitt = 1000; // for time delay
 
-let bey_me ;
+// containers for the objects:
+
+let bey_me ; 
 let bey_opp;
 
 let states = "scene1" // states for the game screen. The states include:
@@ -49,19 +51,21 @@ let opponent_bey ;
 let player_bey = [];
 let scenes = [];
 
-let circradius;
+
+// let circradius;
 
 
 //pre-load function
 function preload(){ 
 ml5_preload_function();
+// assign the canvas to scene
   for (let i = 1; i<16; i++){
     scenes[i] = loadImage(`assets/scenes/scene${i}.png`);
   }
   opponent_bey = loadImage('assets/blades/opponent.png');
   player_bey [0] = loadImage('assets/blades/dragoon.png');
   player_bey  [1] = loadImage('assets/blades/dragoon1.png');
-  
+  // assign audios to songs
   for (let i = 1; i<13; i++){
     songs[i] = loadSound(`assets/audio/audio${i}.mp3`);
   }
@@ -72,13 +76,13 @@ ml5_preload_function();
 //setup-function
 
 function setup() {
-  angleMode(DEGREES);
+  // angleMode(DEGREES);
   video = createCapture(VIDEO, {flipped:true});
   createCanvas(650, 400);
   video.hide();
-
+//ml5 function called
   ml5_setup_logic();
-  
+  // creating new objects
   bey_me = new Beyblade (150,200,60,true);
   bey_opp = new Beyblade (370,200,60,false);
 
@@ -89,6 +93,7 @@ function draw() {
 
  image(video,0,0,650,400);
  
+//  all of the scenes handled using the transition and state machines.
   
   switch (states){
     case "scene1" :
@@ -243,6 +248,8 @@ function scene11(){
 function scene12(){
   image(scenes[12],0,0,650,400);
    play_song(11);
+
+  //  calling the object methods
   
   bey_me.draw_bey();
   bey_me.move_bey();
@@ -323,7 +330,7 @@ function scene16(){
 }
 
 
-
+// each function is called upon that state being set to.
 
 //---------------------------------------------------------------------
 
@@ -346,6 +353,7 @@ function check_clickable(x_min,y_min,x_max,y_max, scene_name= states){
    
 }
 
+// custom function to avoid audio being replayed when the function loops over.
 function play_song(numb) {
   // playing the song only if it's not already playing
   if (!songs[numb].isPlaying()) {
@@ -379,7 +387,7 @@ class Beyblade{
     this.angle = 0;
   }
   
-  
+  // drawing the beyblade and logic behind when and where to draw which one.
   draw_bey(){
     if (mytitle === "Activated") {
         this.special_move = true ;
@@ -400,7 +408,7 @@ class Beyblade{
                 this.angle = this.angle - this.speed;
                }
   }
-  
+  // moving the beyblade using coordinates and calculating the center of the image.
   move_bey(){
     if (this.isPlayer === true){
       if (virtual_click == true){
@@ -414,6 +422,8 @@ class Beyblade{
       this.centerx = this.xpos + this.size / 2;
       this.centery = this.ypos + this.size / 2;
   }
+
+  // checks for the impacts and makes sure to manage the spin value.
   
   check_impact(something) {
     if (dist (this.centerx, this.centery, something.centerx, something.centery) <= this.size) {
@@ -444,6 +454,8 @@ class Beyblade{
     }
   }
   
+  // checking if the player is out of bounds of the stadium.
+
   check_insideStadium(){
     if (dist (this.stadium_centerX, this.stadium_centerY, this.centerx,  this.centery ) > 200){
       this.inside_stadium = false;
@@ -451,7 +463,7 @@ class Beyblade{
       this.inside_stadium = true;
     }
   }
-  
+  // bounces the opponent's blade off the walls
   bounce_walls(){
   
    let displ = dist(this.stadium_centerX, this.stadium_centerY, this.centerx, this.centery);
